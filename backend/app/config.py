@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     # CORS
-    CORS_ORIGINS: str = "http://localhost:3000"
+    CORS_ORIGINS: List[str] = ["http://localhost:3000"]
 
     @validator("CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: str) -> List[str]:
