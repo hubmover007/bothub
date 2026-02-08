@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from app.config import settings
 from app.database import engine, Base
 from app.api.v1 import bots_router
+from app.api.v1.claim import router as claim_router
 
 
 @asynccontextmanager
@@ -31,7 +32,7 @@ app = FastAPI(
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=settings.get_cors_origins_list(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -69,6 +70,7 @@ def root():
 
 # Include API routers
 app.include_router(bots_router, prefix="/api/v1")
+app.include_router(claim_router, prefix="/api/v1")
 
 
 if __name__ == "__main__":
