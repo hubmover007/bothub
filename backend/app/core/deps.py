@@ -8,6 +8,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.core.security import decode_access_token
 
+# Import models (needed for get_current_user)
+from app.models.claim import User
+
 # Security scheme for JWT tokens
 security = HTTPBearer(auto_error=False)
 
@@ -51,6 +54,30 @@ def get_current_user_id(
         raise credentials_exception
 
     return user_id
+
+
+def get_current_user(
+    user_id: UUID = Depends(get_current_user_id),
+    db: Session = Depends(get_db)
+) -> User:
+    """Get current user from database."""
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    return user
+
+
+def get_current_user_optional(
+    user_id: Optional[UUID] = Depends(get_current_user_id_optional),
+    db: Session = Depends(get_db)
+) -> Optional[User]:
+    """Get current user from database (optional)."""
+    if not user_id:
+        return None
+    return db.query(User).filter(User.id == user_id).first()
 
 
 # Database dependency

@@ -13,9 +13,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 
 from app.database import get_db
+from app.models.bot import Bot, BotStatus
 from app.models.claim import (
-    Bot, User, ClaimRequest, BotAccessGrant,
-    ClaimType, ClaimStatus, BotStatus
+    User, ClaimRequest, BotAccessGrant,
+    ClaimType, ClaimStatus
 )
 from app.schemas.claim import (
     BotRegister, BotRegisterResponse, BotCard, BotUpdate,

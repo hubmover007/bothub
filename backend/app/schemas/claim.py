@@ -7,7 +7,8 @@ from typing import Optional, Dict, Any, List
 from uuid import UUID
 from pydantic import BaseModel, Field, HttpUrl
 
-from app.models.claim import ClaimType, ClaimStatus, BotStatus
+from app.models.bot import BotStatus
+from app.models.claim import ClaimType, ClaimStatus
 
 
 # ========== 用户相关 ==========
