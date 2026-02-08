@@ -1,6 +1,6 @@
 from typing import List
 from pydantic_settings import BaseSettings
-from pydantic import validator
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     # Application
     APP_NAME: str = "BotHub API"
     DEBUG: bool = False
+    FRONTEND_URL: str = "http://localhost:3000"
 
     # Database
     DATABASE_URL: str = "postgresql://user:password@localhost:5432/bothub"
@@ -19,13 +20,23 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000"]
+    CORS_ORIGINS: str = "http://localhost:3000"
 
-    @validator("CORS_ORIGINS", pre=True)
-    def assemble_cors_origins(cls, v: str) -> List[str]:
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",")]
-        return v
+    # Feishu (飞书)
+    FEISHU_APP_ID: str = ""
+    FEISHU_APP_SECRET: str = ""
+    FEISHU_REDIRECT_URI: str = "http://localhost:3000/oauth/feishu/callback"
+
+    # File Storage (OSS/S3)
+    STORAGE_TYPE: str = "local"  # local, oss, s3
+    STORAGE_BUCKET: str = ""
+    STORAGE_ENDPOINT: str = ""
+    STORAGE_ACCESS_KEY: str = ""
+    STORAGE_SECRET_KEY: str = ""
+
+    def get_cors_origins_list(self) -> List[str]:
+        """Convert CORS_ORIGINS string to list"""
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
 
     class Config:
         env_file = ".env"
